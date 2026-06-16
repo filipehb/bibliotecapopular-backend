@@ -26,4 +26,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIsbnDuplicado(IsbnJaCadastradoException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
     }
+
+    @ExceptionHandler(LivroNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponse> handleLivroNaoEncontrado(LivroNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
+    }
 }
