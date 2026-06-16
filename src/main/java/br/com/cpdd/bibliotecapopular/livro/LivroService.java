@@ -1,6 +1,9 @@
 package br.com.cpdd.bibliotecapopular.livro;
 
 import br.com.cpdd.bibliotecapopular.exception.IsbnJaCadastradoException;
+import br.com.cpdd.bibliotecapopular.exception.LivroNaoEncontradoException;
+import br.com.cpdd.bibliotecapopular.exemplar.ExemplarRepository;
+import br.com.cpdd.bibliotecapopular.exemplar.StatusExemplar;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -11,9 +14,11 @@ import java.util.List;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final ExemplarRepository exemplarRepository;
 
-    public LivroService(LivroRepository livroRepository) {
+    public LivroService(LivroRepository livroRepository, ExemplarRepository exemplarRepository) {
         this.livroRepository = livroRepository;
+        this.exemplarRepository = exemplarRepository;
     }
 
     @Transactional
@@ -31,5 +36,13 @@ public class LivroService {
         String tituloFiltro = StringUtils.hasText(titulo) ? titulo : null;
         String autorFiltro = StringUtils.hasText(autor) ? autor : null;
         return livroRepository.buscar(tituloFiltro, autorFiltro);
+    }
+
+    @Transactional(readOnly = true)
+    public LivroDetalheResponse buscarDetalhesPorId(Long id) {
+        Livro livro = livroRepository.findById(id)
+                .orElseThrow(LivroNaoEncontradoException::new);
+        long disponiveis = exemplarRepository.countByLivro_IdAndStatus(id, StatusExemplar.DISPONIVEL);
+        return LivroDetalheResponse.from(livro, disponiveis);
     }
 }
