@@ -33,9 +33,11 @@ public class LivroService {
 
     @Transactional(readOnly = true)
     public List<Livro> buscar(String titulo, String autor) {
-        String tituloFiltro = StringUtils.hasText(titulo) ? titulo : null;
-        String autorFiltro = StringUtils.hasText(autor) ? autor : null;
-        return livroRepository.buscar(tituloFiltro, autorFiltro);
+        boolean filtrarTitulo = StringUtils.hasText(titulo);
+        boolean filtrarAutor = StringUtils.hasText(autor);
+        String tituloPattern = filtrarTitulo ? "%" + titulo.toLowerCase() + "%" : "";
+        String autorPattern = filtrarAutor ? "%" + autor.toLowerCase() + "%" : "";
+        return livroRepository.buscar(filtrarTitulo, tituloPattern, filtrarAutor, autorPattern);
     }
 
     @Transactional(readOnly = true)

@@ -12,8 +12,12 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 
     @Query("""
             SELECT l FROM Livro l
-            WHERE (:titulo IS NULL OR LOWER(l.titulo) LIKE LOWER(CONCAT('%', :titulo, '%')))
-              AND (:autor IS NULL OR LOWER(l.autor) LIKE LOWER(CONCAT('%', :autor, '%')))
+            WHERE (:filtrarTitulo = false OR LOWER(l.titulo) LIKE :tituloPattern)
+              AND (:filtrarAutor = false OR LOWER(l.autor) LIKE :autorPattern)
             """)
-    List<Livro> buscar(@Param("titulo") String titulo, @Param("autor") String autor);
+    List<Livro> buscar(
+            @Param("filtrarTitulo") boolean filtrarTitulo,
+            @Param("tituloPattern") String tituloPattern,
+            @Param("filtrarAutor") boolean filtrarAutor,
+            @Param("autorPattern") String autorPattern);
 }
