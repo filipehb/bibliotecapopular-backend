@@ -31,4 +31,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleLivroNaoEncontrado(LivroNaoEncontradoException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
+
+    @ExceptionHandler(ExemplarNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponse> handleExemplarNaoEncontrado(ExemplarNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExemplarIndisponivelException.class)
+    public ResponseEntity<ErrorResponse> handleExemplarIndisponivel(ExemplarIndisponivelException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
+    }
 }

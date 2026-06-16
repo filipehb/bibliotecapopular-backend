@@ -55,4 +55,8 @@ public class Exemplar {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public void emprestar() {
+        this.status = StatusExemplar.EMPRESTADO;
+    }
 }
